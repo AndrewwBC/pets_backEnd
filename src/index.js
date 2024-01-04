@@ -13,6 +13,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/login", UserController.login);
+app.post("/register", UserController.create);
 
 app.use(errorHandler);
 
