@@ -15,7 +15,7 @@ class UserController {
 
     const findByEmail = await UserRepository.findByEmail(email);
     if (!findByEmail) {
-      res.status(404).json({ error: "Email inexistente!" });
+      res.status(404).json({ error: "Conta Inexistente!" });
     }
 
     console.log("Resposta do findByEmail:" + findByEmail);
@@ -27,10 +27,19 @@ class UserController {
   }
 
   show() {}
-  create(req, res) {
+  async create(req, res) {
     const { name, email, password } = req.body;
 
-    res.status(200).json({ message: name, email, password });
+    const userData = {
+      name: name,
+      email: email,
+      password: password,
+    };
+
+    const registerUser = await UserRepository.store(userData);
+    console.log(registerUser);
+
+    if (registerUser) res.status(200).json({ message: name, email, password });
   }
   update() {}
   delete() {}

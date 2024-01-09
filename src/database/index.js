@@ -10,11 +10,6 @@ const db = new Client({
 
 db.connect();
 
-async function teste() {
-  const { rows } = await db.query("select * from users");
-  console.log(rows);
-}
-teste();
 async function ExecuteQuery(query, values) {
   const { rows } = await db.query(query, values);
   return rows;

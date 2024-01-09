@@ -33,7 +33,16 @@ class UserRepository {
     return row;
   }
 
-  store() {}
+  async store(userData) {
+    const { name, email, password } = userData;
+
+    const [row] = await db(
+      "INSERT INTO users(name, email, password) values($1,$2,$3) RETURNING *",
+      [name, email, password]
+    );
+
+    return row;
+  }
 
   update() {}
 
