@@ -5,6 +5,12 @@ const app = express();
 const cors = require("./middlewares/cors");
 const errorHandler = require("./middlewares/errorHandler");
 
+require("dotenv").config({ path: "../.env" });
+console.log({
+  user: process.env.GMAIL_EMAIL,
+  pass: process.env.GMAIL_PASSWORD,
+});
+
 app.use(express.json());
 app.use(cors);
 

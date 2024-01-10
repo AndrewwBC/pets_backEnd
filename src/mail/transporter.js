@@ -1,11 +1,31 @@
-let transporter = nodemailer.createTransport({
+const nodemailer = require("nodemailer");
+
+require("dotenv").config({ path: "../../../.env" });
+
+console.log({
+  user: process.env.GMAIL_EMAIL,
+  pass: process.env.GMAIL_PASSWORD,
+});
+// create reusable transporter object using the default SMTP transport
+const transporter = nodemailer.createTransport({
   service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
-    type: "OAuth2",
-    user: process.env.MAIL_USERNAME,
-    pass: process.env.MAIL_PASSWORD,
-    clientId: process.env.OAUTH_CLIENTID,
-    clientSecret: process.env.OAUTH_CLIENT_SECRET,
-    refreshToken: process.env.OAUTH_REFRESH_TOKEN,
+    user: process.env.GMAIL_EMAIL,
+    pass: process.env.GMAIL_PASSWORD,
   },
 });
+
+const SENDMAIL = async (mailDetails, callback) => {
+  try {
+    const info = await transporter.sendMail(mailDetails);
+    console.log(info);
+    callback(info);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = SENDMAIL;
