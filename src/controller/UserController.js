@@ -28,13 +28,41 @@ class UserController {
 
   show() {}
   async create(req, res) {
-    const { name, email, password } = req.body;
+    let { name, email, password } = req.body;
+    let error = [];
 
     const userData = {
       name: name,
       email: email,
       password: password,
     };
+
+    if (name.length < 1) {
+      error.push({
+        field: "name",
+        message: "O usuário deve preencher o nome",
+      });
+    }
+
+    const emailAlreadyRegistered = await UserRepository.findByEmail(email);
+    console.log(emailAlreadyRegistered);
+    if (emailAlreadyRegistered) {
+      error.push({ field: "email", message: "Email já cadastrado!" });
+    }
+
+    if (password.length < 6) {
+      error.push({
+        field: "password",
+        message: "A senha deve conter seis ou mais caractéres!",
+      });
+      res.status(400).json(error);
+      return;
+    }
+
+    if (error.find((erro) => erro)) {
+      res.status(400).json(error);
+      return;
+    }
 
     const registerUser = await UserRepository.store(userData);
     console.log(registerUser);
