@@ -10,6 +10,15 @@ class UserRepository {
 
   async findById() {}
 
+  async findByUsername(username) {
+    const [row] = await db(
+      `SELECT users.name FROM USERS WHERE users.name = $1`,
+      [username]
+    );
+
+    return row;
+  }
+
   async findByEmail(loginEmail) {
     const [row] = await db(
       `select users.email from users where users.email = $1`,

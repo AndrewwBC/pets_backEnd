@@ -42,16 +42,22 @@ class UserController {
 
     if (name.length < 1) {
       error.push({
-        field: "name",
+        field: "username",
         message: "O usuário deve preencher o nome",
       });
     }
 
+    const usernameAlreadyExists = await UserRepository.findByUsername(name);
+    console.log(usernameAlreadyExists);
+    if (usernameAlreadyExists)
+      error.push({
+        field: "username",
+        message: "Nome de usuário já utilizado!",
+      });
+
     const emailAlreadyRegistered = await UserRepository.findByEmail(email);
-    console.log(emailAlreadyRegistered);
-    if (emailAlreadyRegistered) {
+    if (emailAlreadyRegistered)
       error.push({ field: "email", message: "Email já cadastrado!" });
-    }
 
     if (password.length < 6) {
       error.push({
@@ -68,7 +74,6 @@ class UserController {
     }
 
     const registerUser = await UserRepository.store(userData);
-    console.log(registerUser);
 
     if (registerUser) {
       registeredMailValidation(email, name);
