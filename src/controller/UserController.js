@@ -1,3 +1,6 @@
+const registeredMailValidation = require("../mail/mailsToEachSituation/registered");
+const registeredMail = require("../mail/mailsToEachSituation/registered");
+const sendEmailToChangePasswordFunction = require("../mail/mailsToEachSituation/sendMailToChangePassword");
 const UserRepository = require("../repository/UserRepository");
 
 class UserController {
@@ -67,10 +70,19 @@ class UserController {
     const registerUser = await UserRepository.store(userData);
     console.log(registerUser);
 
-    if (registerUser) res.status(200).json({ message: name, email, password });
+    if (registerUser) {
+      registeredMailValidation(email, name);
+      res.status(200).json({ message: name, email, password });
+    }
   }
   update() {}
   delete() {}
+
+  async sendEmailToChangePassword(req, res) {
+    const { email } = req.body;
+
+    sendEmailToChangePasswordFunction(email);
+  }
 }
 
 module.exports = new UserController();

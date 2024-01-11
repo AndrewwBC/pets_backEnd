@@ -2,13 +2,14 @@ const SENDMAIL = require("../sendMailFunction");
 const HTML_TEMPLATE = require("../htmlTemplate");
 const sendMailFunction = require("../sendMailFunction");
 
-const registeredMailValidation = (userEmail, userName) => {
-  const message = `Bem-Vindo, ${userName}! Clique neste link para validar o seu email <a href=www.google.com>Clique Aqui</a>`;
+const sendEmailToChangePasswordFunction = (userEmail, userName) => {
+  const message = `Esqueceu sua senha? Sem problemas. Clique neste link para trocar a sua senha 
+  <a href=www.google.com>Clique Aqui</a>`;
 
   const options = {
     from: "pets",
     to: userEmail,
-    subject: "CONTA REGISTRADA",
+    subject: "MUDAR SENHA",
     text: message,
     html: HTML_TEMPLATE(message),
   };
@@ -16,4 +17,4 @@ const registeredMailValidation = (userEmail, userName) => {
   sendMailFunction(options);
 };
 
-module.exports = registeredMailValidation;
+module.exports = sendEmailToChangePasswordFunction;

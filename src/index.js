@@ -5,12 +5,6 @@ const app = express();
 const cors = require("./middlewares/cors");
 const errorHandler = require("./middlewares/errorHandler");
 
-require("dotenv").config({ path: "../.env" });
-console.log({
-  user: process.env.GMAIL_EMAIL,
-  pass: process.env.GMAIL_PASSWORD,
-});
-
 app.use(express.json());
 app.use(cors);
 
@@ -20,6 +14,7 @@ app.get("/", (req, res) => {
 
 app.post("/login", UserController.login);
 app.post("/register", UserController.create);
+app.post("/forgotpassword", UserController.sendEmailToChangePassword);
 app.use(errorHandler);
 
 app.listen("3001", () => console.log("Server On 3001!"));
