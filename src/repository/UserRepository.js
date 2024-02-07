@@ -1,4 +1,5 @@
 const ExecuteQuery = require("../database");
+const bcrypt = require("bcrypt");
 
 const db = ExecuteQuery;
 
@@ -45,9 +46,11 @@ class UserRepository {
   async store(userData) {
     const { name, email, password } = userData;
 
+    const cryptedPassword = await bcrypt.hash(password, 12);
+
     const [row] = await db(
       "INSERT INTO users(name, email, password) values($1,$2,$3) RETURNING *",
-      [name, email, password]
+      [name, email, cryptedPassword]
     );
 
     return row;
