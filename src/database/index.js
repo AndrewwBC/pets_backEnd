@@ -10,13 +10,9 @@ const db = new Client({
 
 db.connect();
 
-async function connectDB() {
-  return await connectDB();
-}
-
 async function ExecuteQuery(query, values) {
   const { rows } = await db.query(query, values);
   return rows;
 }
 
-module.exports = { ExecuteQuery, connectDB };
+module.exports = ExecuteQuery;

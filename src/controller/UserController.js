@@ -2,6 +2,7 @@ const registeredMailValidation = require("../mail/mailsToEachSituation/registere
 const registeredMail = require("../mail/mailsToEachSituation/registered");
 const sendEmailToChangePasswordFunction = require("../mail/mailsToEachSituation/sendMailToChangePassword");
 const UserRepository = require("../repository/UserRepository");
+const generateAccessToken = require("../utils/generateToken");
 
 class UserController {
   index(req, res) {
@@ -10,7 +11,6 @@ class UserController {
 
   async login(req, res) {
     const { email, password } = req.body;
-    console.log("Seu email:" + email, password);
 
     if (!email || !password) {
       res.status(400).json({ error: "Preencha os campos corretamente!" });
@@ -21,11 +21,12 @@ class UserController {
       res.status(404).json({ error: "Conta Inexistente!" });
     }
 
-    console.log("Resposta do findByEmail:" + findByEmail);
-    const login = await UserRepository.login(email, password);
-    console.log(login);
-    if (login?.email) {
-      res.status(200).json({ message: "Login efetuado com sucesso!" });
+    const getUserId = await UserRepository.login(email, password);
+    console.log(getUserId);
+
+    if (getUserId?.id) {
+      const accessToken = generateAccessToken(getUserId.id);
+      res.status(200).json({ token: accessToken });
     }
   }
 
@@ -87,6 +88,8 @@ class UserController {
     const { email } = req.body;
 
     sendEmailToChangePasswordFunction(email);
+
+    return res.status(200).json({ message: "Email enviado" });
   }
 }
 

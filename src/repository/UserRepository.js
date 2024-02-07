@@ -34,7 +34,7 @@ class UserRepository {
 
   async login(email, password) {
     const [row] = await db(
-      `select users.email from users WHERE users.email = $1 AND users.password = $2 `,
+      `select users.id from users WHERE users.email = $1 AND users.password = $2 `,
       [email, password]
     );
 
