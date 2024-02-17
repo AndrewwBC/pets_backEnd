@@ -11,6 +11,14 @@ class UserRepository {
 
   async findById() {}
 
+  async getUsername(userId) {
+    const [row] = await db(`SELECT users.name FROM USERS where users.id = $1`, [
+      userId,
+    ]);
+
+    return row;
+  }
+
   async findByUsername(username) {
     const [row] = await db(
       `SELECT users.name FROM USERS WHERE users.name = $1`,
@@ -33,10 +41,10 @@ class UserRepository {
     return false;
   }
 
-  async login(email, password) {
+  async getDataToLoginAuth(email, password) {
     const [row] = await db(
-      `select users.id from users WHERE users.email = $1 AND users.password = $2 `,
-      [email, password]
+      `select users.id, users.password from users WHERE users.email = $1`,
+      [email]
     );
 
     console.log(row);

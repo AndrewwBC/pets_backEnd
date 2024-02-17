@@ -4,9 +4,20 @@ const sendEmailToChangePasswordFunction = require("../mail/mailsToEachSituation/
 const UserRepository = require("../repository/UserRepository");
 const generateAccessToken = require("../utils/generateToken");
 
+const bcrypt = require("bcrypt");
+
 class UserController {
   index(req, res) {
     res.send("Hello, World");
+  }
+
+  async getDataAferLogin(req, res) {
+    const userId = req.userId;
+    const userName = await UserRepository.getUsername(userId);
+
+    console.log(userName);
+
+    return res.sendStatus(200).json({ userName: userName });
   }
 
   async login(req, res) {
@@ -14,19 +25,26 @@ class UserController {
 
     if (!email || !password) {
       res.status(400).json({ error: "Preencha os campos corretamente!" });
+      return;
     }
 
     const findByEmail = await UserRepository.findByEmail(email);
     if (!findByEmail) {
       res.status(404).json({ error: "Conta Inexistente!" });
+      return;
     }
 
-    const getUserId = await UserRepository.login(email, password);
-    console.log(getUserId);
+    const getUserData = await UserRepository.getDataToLoginAuth(email);
 
-    if (getUserId?.id) {
-      const accessToken = generateAccessToken(getUserId.id);
+    const cryptPassword = await bcrypt.compare(password, getUserData.password);
+
+    if (cryptPassword) {
+      const accessToken = generateAccessToken(getUserData.id);
       res.status(200).json({ token: accessToken });
+      return;
+    } else {
+      res.status(403).json({ errorMessage: "Nao autorizado" });
+      return;
     }
   }
 
