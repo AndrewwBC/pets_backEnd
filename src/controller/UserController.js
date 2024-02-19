@@ -13,11 +13,10 @@ class UserController {
 
   async getDataAferLogin(req, res) {
     const userId = req.userId;
-    const userName = await UserRepository.getUsername(userId);
+    const { name } = await UserRepository.getUsername(userId);
 
-    console.log(userName);
-
-    return res.sendStatus(200).json({ userName: userName });
+    res.status(200).json({ userName: name });
+    return;
   }
 
   async login(req, res) {
